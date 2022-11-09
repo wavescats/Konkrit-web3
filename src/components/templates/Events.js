@@ -1,12 +1,11 @@
 import styled, { keyframes } from "styled-components";
 import * as colors from "../../styles/colors";
-
-const Container = styled.div`
-  width: 100%;
-  height: 398px;
-  font-size: 32px;
-  padding: 40px 16px;
-`;
+import SectionLayout from "../molecules/SectionLayout";
+import HideScrollX from "../../components/molecules/HideScrollX";
+import EventCard from "../../components/molecules/EventCard";
+import eventImageOne from "../../assets/image/event_one.png";
+import eventImageTwo from "../../assets/image/event_two.png";
+import eventImageThree from "../../assets/image/event_three.png";
 
 const EventsTopWrapper = styled.div`
   display: flex;
@@ -15,11 +14,13 @@ const EventsTopWrapper = styled.div`
 `;
 
 const shine = keyframes`
-  from{
+  from {
     background-position: 0%;
+   
   }
   to {
     background-position: 200%;
+  
   }
 `;
 
@@ -43,111 +44,41 @@ const ShowAllText = styled.span`
   color: ${colors.textSecondary};
 `;
 
-const EventCardsWrapper = styled.div`
-  margin-top: 24px;
-  display: flex;
-  gap: 16px;
-
-  overflow-x: scroll;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-`;
-
-const EventCardWrapper = styled.div`
-  width: 320px;
-  height: 200px;
-  border-radius: 14px;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  background: ${colors.cardGradient};
-  flex-shrink: 0;
-  overflow: hidden;
-`;
-
-const EventTitles = styled.div`
-  margin-top: 16px;
-`;
-
-const CountDownWrapper = styled.div`
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  align-items: center;
-`;
-
-const EachCountWrapper = styled.div`
-  display: flex;
-`;
-
-const CountText = styled.div`
-  font-family: MarkPro-Heavy;
-  font-size: 36px;
-  line-height: 45.63px;
-  align-self: flex-start;
-`;
-
-const UnitText = styled.div`
-  font-size: 18px;
-  line-height: 27px;
-  align-self: flex-end;
-`;
-
-const EventSubTitle = styled.div`
-  font-weight: 600;
-  font-size: 14px;
-  color: ${colors.textSecondary};
-`;
-
-const EventTitle = styled.div`
-  margin-top: 4px;
-  font-weight: 700;
-  font-size: 16px;
-`;
+const eventData = [
+  {
+    id: 1,
+    imgUrl: eventImageOne,
+    title: "메디소사이어티 NFT 프로젝트",
+    subtitle: "Medistock",
+    targetDate: new Date(2022, 10, 11),
+  },
+  {
+    id: 2,
+    imgUrl: eventImageTwo,
+    title: "아티스트 Ohnim 프로젝트",
+    subtitle: "YG K+",
+  },
+  {
+    id: 3,
+    imgUrl: eventImageThree,
+    title: "아비투스 프리미엄 골프 멤버십 NFT",
+    subtitle: "Habitus",
+  },
+];
 
 function Events() {
   return (
-    <Container>
+    <SectionLayout>
       <EventsTopWrapper>
         <GradientSectionTitle>KONKRIT ORIGINALS</GradientSectionTitle>
         <ShowAllText>이벤트 전체보기</ShowAllText>
       </EventsTopWrapper>
-      <EventCardsWrapper>
-        {[1, 2, 3, 4].map(num => (
-          <div>
-            <EventCardWrapper>
-              <CountDownWrapper>
-                <EachCountWrapper>
-                  <CountText>08</CountText>
-                  <UnitText>일</UnitText>
-                </EachCountWrapper>
-                <EachCountWrapper>
-                  <CountText>08</CountText>
-                  <UnitText>일</UnitText>
-                </EachCountWrapper>
-                <EachCountWrapper>
-                  <CountText>08</CountText>
-                  <UnitText>일</UnitText>
-                </EachCountWrapper>
-                <EachCountWrapper>
-                  <CountText>08</CountText>
-                  <UnitText>일</UnitText>
-                </EachCountWrapper>
-              </CountDownWrapper>
-            </EventCardWrapper>
-            <EventTitles>
-              <EventSubTitle>Medistock</EventSubTitle>
-              <EventTitle>메디소사이어티 NFT 프로젝트</EventTitle>
-            </EventTitles>
-          </div>
+      <HideScrollX>
+        {eventData.map(event => (
+          <EventCard {...event} key={event.id} />
         ))}
-      </EventCardsWrapper>
-    </Container>
+      </HideScrollX>
+    </SectionLayout>
   );
 }
 
