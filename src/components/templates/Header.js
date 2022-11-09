@@ -4,7 +4,9 @@ import HamburgerIcon from "../atoms/HamburgerIcon";
 import * as colors from "../../styles/colors";
 import Wallet from "../atoms/Wallet";
 import styled from "styled-components";
-import KaiKas_image from "../atoms/MetaMaskIcon";
+import KaiKas_image from "../../assets/image/kaikas.png";
+import { toast } from "react-toastify";
+import useAuth from "src/hooks/useAuth";
 
 const Container = styled.header`
   width: 100%;
@@ -51,7 +53,69 @@ const SearchIconWrapper = styled.div`
   margin-left: 16px;
 `;
 
+const KaikasImage = styled.img`
+  width: 20px;
+  height: 20px;
+`;
+
+const klaytn = window.klaytn;
+
+async function isKaikasAvailable() {
+  const klaytn = window?.klaytn;
+  if (!klaytn) {
+    return false;
+  }
+
+  const results = await Promise.all([
+    klaytn._kaikas.isApproved(),
+    klaytn._kaikas.isEnabled(),
+    klaytn._kaikas.isUnlocked(),
+  ]);
+  return results.every(res => res);
+}
+
 function Header() {
+  const { user, setUser } = useAuth();
+  async function loginWithKaikas() {
+    if (!klaytn) {
+      toast.error("kaikas 설치 해주세요!", {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      return;
+    }
+
+    try {
+      const accounts = await toast.promise(
+        klaytn.enable(),
+        {
+          pending: "Kaikas 지갑 연동 중",
+        },
+        { closeButton: true }
+      );
+      setUser(accounts[0]);
+      localStorage.setItem("_user", accounts[0]);
+      toast.success(`${accounts[0].slice(0, 13)}...님 환영합니다~ ^^`);
+    } catch {
+      toast.error("로그인 실패..! 다시 시도해주세요~^^");
+    }
+  }
+
+  function handleLogin() {
+    loginWithKaikas();
+  }
+
+  async function handleDone() {
+    const isAvailable = await isKaikasAvailable();
+    if (isAvailable) {
+      toast.success("엇 ..또 로그인 하실려구요?!");
+      return;
+    }
+
+    toast.warn("다시 로그인 해주세요 ^^!");
+    setUser("");
+    localStorage.removeItem("_user");
+  }
+
   return (
     <Container>
       <LogoWrapper>
@@ -62,8 +126,8 @@ function Header() {
           <SearchIcon />
         </SearchIconWrapper>
       </SearchBarWrapper>
-      <WalletBox>
-        <Wallet />
+      <WalletBox onClick={user ? handleDone : handleLogin}>
+        {user ? <KaikasImage src={KaiKas_image} /> : <Wallet />}
       </WalletBox>
       <GrayRoundBox>
         <HamburgerIcon />
