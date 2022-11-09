@@ -1,5 +1,7 @@
 import * as colors from "../../styles/colors";
 import styled from "styled-components";
+import banner_image1 from "../../assets/image/tb_image_one.png";
+import banner_image2 from "../../assets/image/tb_image_two.png";
 
 const Container = styled.div`
   width: 100%;
@@ -13,6 +15,9 @@ const BannerWrapper = styled.div`
   height: 100%;
   background-color: ${colors.textYellow};
   position: relative;
+  background: ${props => `url(${props.imgUrl})`};
+  background-size: cover;
+  background-position: 50% 50%;
 `;
 
 const TopLeftTriangle = styled.div`
@@ -52,10 +57,21 @@ const BannerOrderBox = styled.div`
   align-items: center;
 `;
 
+const bannerImg = [
+  {
+    id: 1,
+    imgUrl: banner_image1,
+  },
+  {
+    id: 2,
+    imgUrl: banner_image2,
+  },
+];
+
 function TopBanner() {
   return (
     <Container>
-      <BannerWrapper>
+      <BannerWrapper imgUrl={banner_image1}>
         <TopLeftTriangle />
         <BottomRightTriangle />
         <BannerOrderBox>1 / 2</BannerOrderBox>
